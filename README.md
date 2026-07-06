@@ -16,7 +16,16 @@
 [![Made with Love](https://img.shields.io/badge/Made%20with-❤️-red.svg)](#)
 
 <br />
-<img src="assets/screenshot.jpg" alt="Prism Player Screenshot" width="800">
+
+### 📸 Screenshots
+<p align="center">
+  <img src="assets/dashboard.png" width="48%" alt="Dashboard">
+  <img src="assets/search.png" width="48%" alt="Universal Search">
+</p>
+<p align="center">
+  <img src="assets/player.png" width="48%" alt="Player Mode">
+  <img src="assets/settings.png" width="48%" alt="Settings">
+</p>
 
 </div>
 
