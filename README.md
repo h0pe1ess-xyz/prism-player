@@ -15,6 +15,9 @@
 [![Python](https://img.shields.io/badge/Python-3.8+-yellow.svg)](https://www.python.org/)
 [![Made with Love](https://img.shields.io/badge/Made%20with-❤️-red.svg)](#)
 
+<br />
+<img src="assets/screenshot.jpg" alt="Prism Player Screenshot" width="800">
+
 </div>
 
 <br />
