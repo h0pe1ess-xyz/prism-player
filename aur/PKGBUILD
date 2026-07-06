@@ -1,0 +1,35 @@
+# Maintainer: h0pe1ess <h0pe1ess-xyz@example.com>
+pkgname=prism-player-git
+pkgver=r1.0.0
+pkgrel=1
+pkgdesc="Advanced Cyberpunk Terminal Music Experience for Linux & macOS"
+arch=('any')
+url="https://github.com/h0pe1ess-xzy/prism-player"
+license=('GPL3')
+depends=('python' 'python-rich' 'python-requests' 'python-mutagen' 'yt-dlp' 'ffmpeg' 'cava')
+makedepends=('git')
+provides=("${pkgname%-git}")
+conflicts=("${pkgname%-git}")
+source=("git+https://github.com/h0pe1ess-xzy/prism-player.git"
+        "prism-player.sh")
+md5sums=('SKIP'
+         'SKIP')
+
+pkgver() {
+  cd "$srcdir/${pkgname%-git}"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+package() {
+  # Create directories
+  install -dm755 "$pkgdir/opt/${pkgname%-git}"
+  install -dm755 "$pkgdir/usr/bin"
+  
+  # Install application files
+  cd "$srcdir/${pkgname%-git}"
+  cp -a main.py prism assets "$pkgdir/opt/${pkgname%-git}/"
+  
+  # Install wrapper script
+  cd "$srcdir"
+  install -Dm755 prism-player.sh "$pkgdir/usr/bin/${pkgname%-git}"
+}
