@@ -437,15 +437,23 @@ def get_lyrics(title, artist):
         # 1. Exact match
         data = fetch(title, artist)
         
-        # 1.5 Extract from "Artist - Title" format (common on YouTube)
         extracted_artist = artist
         extracted_title = title
         if " - " in title:
             parts = title.split(" - ", 1)
+            # Try Artist - Title
             extracted_artist = parts[0].strip()
             extracted_title = parts[1].strip()
             if not data:
                 data = fetch(extracted_title, extracted_artist)
+            # Try Title - Artist if the above failed
+            if not data:
+                extracted_artist_2 = parts[1].strip()
+                extracted_title_2 = parts[0].strip()
+                data = fetch(extracted_title_2, extracted_artist_2)
+                if data:
+                    extracted_artist = extracted_artist_2
+                    extracted_title = extracted_title_2
 
         # 2. Cleaned title (remove anything in parenthesis/brackets)
         cleaned_title = re.sub(r'[\(\[\{].*?[\)\]\}]', '', extracted_title).strip()
@@ -485,4 +493,4 @@ def get_lyrics(title, artist):
             
         return {"type": "error", "text": "No lyrics content available."}
     except Exception as e:
-        return {"type": "error", "text": "Error fetching lyrics (Network issue)."}
+        return {"type": "error", "text": f"Error fetching lyrics: {str(e)}"}
