@@ -1,0 +1,6 @@
+blessed
+requests
+yt-dlp
+pydbus
+pypresence
+mutagen
