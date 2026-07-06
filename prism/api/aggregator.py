@@ -430,7 +430,7 @@ def get_lyrics(title, artist):
             else:
                 url = f"https://lrclib.net/api/search?track_name={urllib.parse.quote(t)}"
             headers = {"User-Agent": "PrismPlayer/1.0 (https://github.com/h0pe1ess-xzy/prism-player)"}
-            r = requests.get(url, headers=headers, timeout=5)
+            r = requests.get(url, headers=headers, timeout=10)
             r.raise_for_status()
             return r.json()
 
