@@ -19,12 +19,12 @@
 
 ### 📸 Screenshots
 <p align="center">
-  <img src="assets/dashboard.png" width="48%" alt="Dashboard">
-  <img src="assets/search.png" width="48%" alt="Universal Search">
+  <img src="assets/dashboard.jpg" width="48%" alt="Dashboard">
+  <img src="assets/playlists.png" width="48%" alt="Playlists">
 </p>
 <p align="center">
   <img src="assets/player.png" width="48%" alt="Player Mode">
-  <img src="assets/settings.png" width="48%" alt="Settings">
+  <img src="assets/lyrics.png" width="48%" alt="Lyrics Mode">
 </p>
 
 </div>
