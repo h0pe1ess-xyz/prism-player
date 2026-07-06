@@ -8,6 +8,9 @@ from prism.core.config import CACHE_DIR, safe_cache_id
 import time
 from io import BytesIO
 
+mini_art_cache = {}
+cava_states = {"left": [], "right": []}
+
 def download_cover_to_cache(cache_id, thumbnails_list):
     """Завантажує обкладинку за будь-яким ID (videoId, playlistId, browseId)."""
     if not cache_id:

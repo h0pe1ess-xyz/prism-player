@@ -44,7 +44,6 @@ os.makedirs(CACHE_DIR, exist_ok=True)
 
 # --- ГЛОБАЛЬНІ СТАНИ ---
 FPS = 15
-cava_states = {"left": [], "right": []}
 cava_enabled = settings.get("cava_enabled", True)
 current_volume = settings.get("default_volume", 50)
 theme_name = settings.get("theme", "Cyberpunk")
@@ -52,7 +51,6 @@ if theme_name in THEMES:
     console.push_theme(THEMES[theme_name])
 home_data = []  # Дані для дашборду
 home_loading = True
-mini_art_cache = {}  # Кеш мініатюрних обкладинок {video_id: Text}
 dashboard_covers_ready = threading.Event()
 toast_message = ""  # Тост-повідомлення
 toast_time = 0  # Час показу тосту
