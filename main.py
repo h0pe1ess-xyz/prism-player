@@ -177,25 +177,32 @@ def preload_next_track_worker(track_dict, width):
         autoplay_queue = []
         try:
             if source == "youtube":
-                fallback = yt_client.search(song_info.get("title", ""), limit=15)
-                for t in fallback:
-                    if t.get("videoId") and t.get("videoId") != track_id:
-                        autoplay_queue.append({
-                            "id": t.get("videoId"),
-                            "title": t.get("title"),
-                            "artist": t.get("artists", [{"name": "Unknown"}])[0]["name"] if t.get("artists") else "Unknown",
-                            "source": "youtube",
-                            "thumbnails": t.get("thumbnails", [])
-                        })
+                try:
+                    # Get real YouTube Music radio/up-next list
+                    radio = yt_client.get_watch_playlist(videoId=track_id, limit=20)
+                    for t in radio.get("tracks", []):
+                        if t.get("videoId") and t.get("videoId") != track_id:
+                            autoplay_queue.append({
+                                "id": t.get("videoId"),
+                                "title": t.get("title"),
+                                "artist": t.get("artists", [{"name": "Unknown"}])[0]["name"] if t.get("artists") else "Unknown",
+                                "source": "youtube",
+                                "thumbnails": t.get("thumbnails", [])
+                            })
+                except Exception:
+                    pass
             elif source == "soundcloud":
                 from prism.api.aggregator import search_soundcloud
-                fallback = search_soundcloud(f"{song_info.get('title', '')} {song_info['artists'][0]['name']}", limit=15)
+                # Search by artist to get related artist tracks instead of the same song
+                artist_name = song_info['artists'][0]['name'] if song_info.get('artists') else song_info.get('author', '')
+                fallback = search_soundcloud(f"{artist_name} track", limit=15)
                 for t in fallback:
-                    if t.get("id") and t.get("id") != track_id:
+                    if t.get("id") and str(t.get("id")) != str(track_id) and t.get("title") != song_info.get("title"):
                         autoplay_queue.append(t)
             elif source == "spotify":
                 from prism.api.aggregator import search_spotify
-                fallback = search_spotify(f"{song_info.get('title', '')} {song_info['artists'][0]['name']}", limit=15)
+                artist_name = song_info['artists'][0]['name'] if song_info.get('artists') else song_info.get('author', '')
+                fallback = search_spotify(f"{artist_name}", limit=15)
                 for t in fallback:
                     if t.get("id") and t.get("id") != track_id:
                         autoplay_queue.append(t)
@@ -1187,8 +1194,8 @@ if __name__ == "__main__":
                                 process = None
 
                     if key.lower() == "n":
-                        history_tracks.append({"video_id": video_id, "info": {"id": video_id, "title": song_info.get("title"), "artist": song_info["artists"][0]["name"], "source": song_info.get("source", "youtube"), "thumbnails": song_info.get("thumbnails")}, "art": art_panel})
-                        process.kill()
+                        if process:
+                            process.kill()
                         # Override repeat so it actually goes to next
                         if is_repeating:
                             is_repeating = False
@@ -1196,10 +1203,22 @@ if __name__ == "__main__":
                             toast_time = time.time()
                     elif key.lower() == "b" and history_tracks:
                         prev = history_tracks.pop()
+                        # Save current track to put it at the front of the queue so N returns to it
+                        current_track = {
+                            "id": video_id, 
+                            "title": song_info.get("title", "Unknown"), 
+                            "artist": song_info.get("artists", [{"name": "Unknown"}])[0]["name"] if song_info.get("artists") else song_info.get("author", "Unknown"), 
+                            "source": song_info.get("source", "youtube"), 
+                            "thumbnails": song_info.get("thumbnails", [])
+                        }
+                        
                         video_id = prev["video_id"]
-                        process.kill()
+                        if process:
+                            process.kill()
                         try:
-                            song_info, art_panel, process, autoplay_tracks = start_track(prev["info"]) # Assuming history info is full
+                            song_info, art_panel, process, new_auto = start_track(prev["info"])
+                            # Prepend current_track to the old autoplay_tracks, ignore new_auto to maintain queue
+                            autoplay_tracks.insert(0, current_track)
                             start_time = time.time()
                             paused_time_accumulated = 0
                             total_duration = int(song_info["duration_seconds"])
