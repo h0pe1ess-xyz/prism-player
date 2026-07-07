@@ -308,7 +308,9 @@ def start_track(track_dict, start_seconds=0):
                 stream_link
             ]
             if globals().get("video_id") == track_id:
-                globals()["start_time"] = __import__('time').time() - start_seconds
+                cur_fx = settings.get("audio_fx", "Normal")
+                current_speed = 1.15 if cur_fx == "Nightcore" else (0.85 if cur_fx == "Slowed" else 1.0)
+                globals()["start_time"] = __import__('time').time() - (start_seconds / current_speed)
                 p = subprocess.Popen(ffplay_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                 globals()["process"] = p
                 if start_seconds == 0:
@@ -533,10 +535,12 @@ if __name__ == "__main__":
 
                 # Обрахунок часу програвання
                 if process and process.poll() is None:
+                    cur_fx = settings.get("audio_fx", "Normal")
+                    current_speed = 1.15 if cur_fx == "Nightcore" else (0.85 if cur_fx == "Slowed" else 1.0)
                     if not is_paused:
-                        elapsed = int(time.time() - start_time - paused_time_accumulated)
+                        elapsed = int((time.time() - start_time - paused_time_accumulated) * current_speed)
                     else:
-                        elapsed = int(pause_start_mark - start_time - paused_time_accumulated)
+                        elapsed = int((pause_start_mark - start_time - paused_time_accumulated) * current_speed)
                     if elapsed > total_duration:
                         elapsed = total_duration
 
@@ -1175,7 +1179,9 @@ if __name__ == "__main__":
                                 process.kill()
                             try:
                                 song_info, art_panel, process, _ = start_track({"id": video_id, "title": song_info.get("title"), "artist": song_info["artists"][0]["name"], "source": song_info.get("source", "youtube"), "thumbnails": song_info.get("thumbnails")}, start_seconds=new_target)
-                                start_time = time.time() - new_target
+                                cur_fx = settings.get("audio_fx", "Normal")
+                                current_speed = 1.15 if cur_fx == "Nightcore" else (0.85 if cur_fx == "Slowed" else 1.0)
+                                start_time = time.time() - (new_target / current_speed)
                                 paused_time_accumulated = 0
                                 is_paused = False
                             except Exception:
@@ -1187,7 +1193,9 @@ if __name__ == "__main__":
                                 process.kill()
                             try:
                                 song_info, art_panel, process, _ = start_track({"id": video_id, "title": song_info.get("title"), "artist": song_info["artists"][0]["name"], "source": song_info.get("source", "youtube"), "thumbnails": song_info.get("thumbnails")}, start_seconds=new_target)
-                                start_time = time.time() - new_target
+                                cur_fx = settings.get("audio_fx", "Normal")
+                                current_speed = 1.15 if cur_fx == "Nightcore" else (0.85 if cur_fx == "Slowed" else 1.0)
+                                start_time = time.time() - (new_target / current_speed)
                                 paused_time_accumulated = 0
                                 is_paused = False
                             except Exception:
