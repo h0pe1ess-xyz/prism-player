@@ -35,5 +35,10 @@ THEMES = {
         "primary": "#cba6f7", "primary.bold": "bold #cba6f7", "primary.dim": "dim #cba6f7", "primary_inv": "bold black on #cba6f7",
         "secondary": "#f5c2e7", "secondary.bold": "bold #f5c2e7",
         "tertiary.bold": "bold #89b4fa"
+    }),
+    "Crimson": Theme({
+        "primary": "#ff0033", "primary.bold": "bold #ff0033", "primary.dim": "dim #ff0033", "primary_inv": "bold black on #ff0033",
+        "secondary": "#ff3333", "secondary.bold": "bold #ff3333",
+        "tertiary.bold": "bold #990000"
     })
 }
